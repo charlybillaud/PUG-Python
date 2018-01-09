@@ -2,13 +2,6 @@
 import socket
 import sys
 import random
-import MySQLdb
-import os
-import re
-import string
-import urllib2
-import urllib
-from time import ctime
 from time import sleep
 from time import time
 from threading import Thread
@@ -22,7 +15,7 @@ admin_chan = "#urtpickup.admins"
 
 OWNER="~gost0r@Gost0r.users.quakenet.orge"
 
-print "initing values..."
+print ("initing values...")
 
 filename_cfg    = "config.cfg"          #configfile
 filename_ban    = "bans.cfg"            #banfile
@@ -165,28 +158,28 @@ class pickup(Thread):
         endtime = f.readline().split('=')
         endtime = endtime[1].replace('\n','')
         f.close()
-        print 'game: ' + game
-        print 'locked: ' + locked
-        print 'playernum: ' + playernum
-        print 'gameover: ' + gameover
-        print 'server: ' + server
-        print 'rcon: ' + rcon
-        print 'password: ' + password
-        print 'endtime: ' + endtime
+        print ('game: ' + game)
+        print ('locked: ' + locked)
+        print ('playernum: ' + playernum)
+        print ('gameover: ' + gameover)
+        print ('server: ' + server)
+        print ('rcon: ' + rcon)
+        print ('password: ' + password)
+        print ('endtime: ' + endtime)
         
         f = open(filename_ban, 'r')
         banlist = f.readlines()
         for i in range(0,len(banlist)-1):
             banlist[i] = banlist[i].replace('\n','')
         f.close()
-        print banlist
+        print (banlist)
         
         f = open(filename_map, 'r')
         maplist = f.readlines()
         for i in range(0,len(maplist)-1):
             maplist[i] = maplist[i].replace('\n','')
         f.close()
-        print maplist
+        print (maplist)
 
         if game == "1":
             f = open(filename_player, 'r')
@@ -197,8 +190,8 @@ class pickup(Thread):
                 addlist[i] = addlist[i].replace('\n','')
                 votelist.append('')
             f.close()
-            print playerlist
-            print votelist
+            print (playerlist)
+            print (votelist)
         else:
             playerlist = []
             addlist = []
@@ -276,8 +269,8 @@ class pickup(Thread):
                     swrite = swrite + cfg_file_cont[i]
                 f.write(swrite)
                 f.close()
-                print playerlist.index(nick)
-                print votelist
+                print (playerlist.index(nick))
+                print (votelist)
                 votelist.pop(playerlist.index(nick)) # vote rückgängig machen
                 playerlist.remove(nick)
                 swrite = ''
@@ -289,7 +282,7 @@ class pickup(Thread):
                         swrite = swrite + '\n' + playerlist[i]
                 f.write(swrite)
                 f.close()
-                print playerlist
+                print (playerlist)
                 if has_quit == False:
                     status_msg = True
 
@@ -328,7 +321,7 @@ class pickup(Thread):
         if found == True:
             if votelist[playerlist.index(nick)] == '':
                 sent_map = sent_map.replace(map_prefix,'')
-                print maplist
+                print (maplist)
                 if sent_map in maplist:
                     votelist[playerlist.index(nick)] = sent_map
                     self.s.send('NOTICE ' + nick + ' :' + pkup_map + '\n')
@@ -411,8 +404,8 @@ class pickup(Thread):
         if found == True:
             if gameoverlist[playerlist.index(nick)] == '':
                 gameoverlist[playerlist.index(nick)] = '1'
-                print playerlist.index(nick)
-                print gameoverlist
+                print (playerlist.index(nick))
+                print (gameoverlist)
                 cfg_file_cont = []
                 f = open(filename_cfg, 'r')
                 cfg_file_cont = f.readlines()
@@ -517,9 +510,9 @@ class pickup(Thread):
         f = open(filename_cfg, 'r')
         cfg_file_cont = f.readlines()
         f.close()
-        print cfg_file_cont[0]
+        print (cfg_file_cont[0])
         cfg_file_cont[0] = 'game=1\n'
-        print cfg_file_cont[6]
+        print (cfg_file_cont[6])
         cfg_file_cont[6] = 'password=' + str(password) + '\n'
         swrite = ''
         f = open(filename_cfg, 'w')
@@ -533,118 +526,118 @@ class pickup(Thread):
             tempmaplist = maplist[i]
             tempvotelistcount = votelist.count(tempmaplist)
             smaplist.append(votelist.count(maplist[i]))
-        print "smaplist passed"
+        print ("smaplist passed")
         vmaplist = []
         for i in range(0,len(maplist)):
             vmaplist.append(maplist[i])
-        print "vmaplist passed"
+        print ("vmaplist passed")
             
-	durchlaeufe = len(smaplist)
-	while durchlaeufe >= 1:
-	    for k in range(len(smaplist) - 1):
-                if smaplist[k] > smaplist[k+1]:
-                    temp = smaplist[k]
-                    vtemp = vmaplist[k]
-                    smaplist[k] = smaplist[k+1]
-                    vmaplist[k] = vmaplist[k+1]
-                    smaplist[k+1] = temp
-                    vmaplist[k+1] = vtemp
-	    durchlaeufe = durchlaeufe - 1
-    
-        smap = vmaplist[len(vmaplist)-1]
-            
-        randommapwhentie = []
-        randommapwhentie.append(smap)
-        for i in range(len(smaplist)-2,0,-1):
-            if smaplist[i] == smaplist[len(smaplist)-1]:
-                randommapwhentie.append(vmaplist[i])
-        randomnum = random.randint(0, len(randommapwhentie)-1)
-        smap = 'ut4_' +randommapwhentie[randomnum]
-            
-        print "smap passed " + smap
-        #CAPTAIN#
-        captain1 = random.randint(0, 9)
-        captain1 = playerlist[captain1]
-        captain2 = random.randint(0, 9)
-        captain2 = playerlist[captain2]
-        while(captain1 == captain2):
+        durchlaeufe = len(smaplist)
+        while durchlaeufe >= 1:
+            for k in range(len(smaplist) - 1):
+                    if smaplist[k] > smaplist[k+1]:
+                        temp = smaplist[k]
+                        vtemp = vmaplist[k]
+                        smaplist[k] = smaplist[k+1]
+                        vmaplist[k] = vmaplist[k+1]
+                        smaplist[k+1] = temp
+                        vmaplist[k+1] = vtemp
+            durchlaeufe = durchlaeufe - 1
+
+            smap = vmaplist[len(vmaplist)-1]
+
+            randommapwhentie = []
+            randommapwhentie.append(smap)
+            for i in range(len(smaplist)-2,0,-1):
+                if smaplist[i] == smaplist[len(smaplist)-1]:
+                    randommapwhentie.append(vmaplist[i])
+            randomnum = random.randint(0, len(randommapwhentie)-1)
+            smap = 'ut4_' +randommapwhentie[randomnum]
+
+            print ("smap passed " + smap)
+            #CAPTAIN#
+            captain1 = random.randint(0, 9)
+            captain1 = playerlist[captain1]
             captain2 = random.randint(0, 9)
             captain2 = playerlist[captain2]
-        print "captain passed " + captain1 + " " + captain2
-        #SERVER SET#
-        a_server = server
-        a_rcon = rcon
-        a_smap = smap
-        a_password = password
-        a_captain1 = captain1
-        a_captain2 = captain2
-        serverThread = q3rcon()
-        serverThread.start()
-        print "serverthread passed"
-        #MAP votes
-        print_maps = 'No votes for any map - RANDOM MAP!'
-        derpcount = 0
-        if len(maplist) != 0:
-            for i in range(0,len(maplist)):
-                num_voted = votelist.count(maplist[i])
-                if num_voted > 0:
-                    if derpcount == 0:
-                        print_maps = map_prefix + maplist[i] + ': '+str(num_voted)
-                        derpcount = 1
-                    else:
-                        print_maps = print_maps + ' || ' + map_prefix + maplist[i] + ': '+str(num_voted)
-                        
-        #MESSAGES
-        msg = pkup_go_admin.replace(".captain1.", captain1)
-        msg = msg.replace(".captain2.", captain2)
-        msg = msg.replace(".password.", str(password))
-        msg = msg.replace(".map.", smap)
-        self.s.send('PRIVMSG ' + admin_chan + ' :' + msg + '\n')
-        splayerlist = ''
-        for i in range(0,len(playerlist)):
-            if playerlist[i] != '':
-                if splayerlist == '':
-                    splayerlist = playerlist[i]
-                else:
-                    splayerlist = splayerlist + ' ' + playerlist[i]
-        msg = pkup_go_pub2.replace(".playerlist.", str(splayerlist))
-        self.s.send('PRIVMSG ' + pub_chan + ' :' + pkup_go_pub1 + '\n')
-        sleep(2)
-        self.s.send('PRIVMSG ' + pub_chan + ' :' + print_maps + '\n')
-        sleep(3)
-        self.s.send('PRIVMSG ' + pub_chan + ' :' + msg + '\n')
-        sleep(2)
-        msg = pkup_go_pub3.replace(".captain1.", captain1)
-        msg = msg.replace(".captain2.", captain2)
-        self.s.send('PRIVMSG ' + pub_chan + ' :' + msg + '\n')
-        sleep(2)
-        msg = pkup_go_pub4.replace(".map.", smap)
-        self.s.send('PRIVMSG ' + pub_chan + ' :' + msg + '\n')
-        sleep(2)
-        self.s.send('PRIVMSG ' + pub_chan + ' :' + pkup_go_pub5 + '\n')
-        sleep(3)
+            while(captain1 == captain2):
+                captain2 = random.randint(0, 9)
+                captain2 = playerlist[captain2]
+            print ("captain passed " + captain1 + " " + captain2)
+            #SERVER SET#
+            a_server = server
+            a_rcon = rcon
+            a_smap = smap
+            a_password = password
+            a_captain1 = captain1
+            a_captain2 = captain2
+            serverThread = q3rcon()
+            serverThread.start()
+            print ("serverthread passed")
+            #MAP votes
+            print_maps = ('No votes for any map - RANDOM MAP!')
+            derpcount = 0
+            if len(maplist) != 0:
+                for i in range(0,len(maplist)):
+                    num_voted = votelist.count(maplist[i])
+                    if num_voted > 0:
+                        if derpcount == 0:
+                            print_maps = map_prefix + maplist[i] + ': '+str(num_voted)
+                            derpcount = 1
+                        else:
+                            print_maps = print_maps + ' || ' + map_prefix + maplist[i] + ': '+str(num_voted)
 
-        smsgcap = pkup_go_cap.replace(".map.", smap)
-        smsgcap = smsgcap.replace(".server.", server)
-        smsgcap = smsgcap.replace(".password.", str(password))
-        msgply = pkup_go_player.replace(".map.", smap)
-        msgply = msgply.replace(".server.", server)
-        msgply = msgply.replace(".password.", str(password))
-        
-        for i in range(0,len(playerlist)):
-            if playerlist[i] == captain1:
-                msgcap = smsgcap.replace(".captain.", captain2)
-                self.s.send('PRIVMSG ' + playerlist[i] + ' :' + msgcap + '\n')
-            elif playerlist[i] == captain2:
-                msgcap = smsgcap.replace(".captain.", captain1)
-                self.s.send('PRIVMSG ' + playerlist[i] + ' :' + msgcap + '\n')
-            else:
-                self.s.send('PRIVMSG ' + playerlist[i] + ' :' + msgply + '\n')
+            #MESSAGES
+            msg = pkup_go_admin.replace(".captain1.", captain1)
+            msg = msg.replace(".captain2.", captain2)
+            msg = msg.replace(".password.", str(password))
+            msg = msg.replace(".map.", smap)
+            self.s.send('PRIVMSG ' + admin_chan + ' :' + msg + '\n')
+            splayerlist = ''
+            for i in range(0,len(playerlist)):
+                if playerlist[i] != '':
+                    if splayerlist == '':
+                        splayerlist = playerlist[i]
+                    else:
+                        splayerlist = splayerlist + ' ' + playerlist[i]
+            msg = pkup_go_pub2.replace(".playerlist.", str(splayerlist))
+            self.s.send('PRIVMSG ' + pub_chan + ' :' + pkup_go_pub1 + '\n')
+            sleep(2)
+            self.s.send('PRIVMSG ' + pub_chan + ' :' + print_maps + '\n')
             sleep(3)
-        self.s.send('PRIVMSG ' + pub_chan + ' :' + pkup_go_pub6 + '\n')
-        sleep(10)
-        self.devoiceall(playerlist)
-        self.update_ping()
+            self.s.send('PRIVMSG ' + pub_chan + ' :' + msg + '\n')
+            sleep(2)
+            msg = pkup_go_pub3.replace(".captain1.", captain1)
+            msg = msg.replace(".captain2.", captain2)
+            self.s.send('PRIVMSG ' + pub_chan + ' :' + msg + '\n')
+            sleep(2)
+            msg = pkup_go_pub4.replace(".map.", smap)
+            self.s.send('PRIVMSG ' + pub_chan + ' :' + msg + '\n')
+            sleep(2)
+            self.s.send('PRIVMSG ' + pub_chan + ' :' + pkup_go_pub5 + '\n')
+            sleep(3)
+
+            smsgcap = pkup_go_cap.replace(".map.", smap)
+            smsgcap = smsgcap.replace(".server.", server)
+            smsgcap = smsgcap.replace(".password.", str(password))
+            msgply = pkup_go_player.replace(".map.", smap)
+            msgply = msgply.replace(".server.", server)
+            msgply = msgply.replace(".password.", str(password))
+
+            for i in range(0,len(playerlist)):
+                if playerlist[i] == captain1:
+                    msgcap = smsgcap.replace(".captain.", captain2)
+                    self.s.send('PRIVMSG ' + playerlist[i] + ' :' + msgcap + '\n')
+                elif playerlist[i] == captain2:
+                    msgcap = smsgcap.replace(".captain.", captain1)
+                    self.s.send('PRIVMSG ' + playerlist[i] + ' :' + msgcap + '\n')
+                else:
+                    self.s.send('PRIVMSG ' + playerlist[i] + ' :' + msgply + '\n')
+                sleep(3)
+            self.s.send('PRIVMSG ' + pub_chan + ' :' + pkup_go_pub6 + '\n')
+            sleep(10)
+            self.devoiceall(playerlist)
+            self.update_ping()
     
     def p_end(self):
         global endtime
@@ -703,7 +696,7 @@ class pickup(Thread):
                     for textcounter in range(0, len(irctext)):
                         text = irctext[textcounter]
                         if len(text) > 0:
-                            print text
+                            print (text)
                         data = text.split()
                         if len(data) <= 1:
                             data = ['', '']            
@@ -756,7 +749,7 @@ class pickup(Thread):
                                     if "@" in getnames[zahl]:
                                         getnames[zahl] = getnames[zahl].replace("@", "")
                                         op.append(getnames[zahl])
-                                        print op
+                                        print (op)
                                     elif "+" in getnames[zahl]:
                                         if game == '0':
                                             getnames[zahl] = getnames[zahl].replace("+", "")
@@ -777,7 +770,7 @@ class pickup(Thread):
                             if nick in op:
                                 op.remove(nick)
                                 op.append(newnick)
-                                print op
+                                print (op)
                             found = False
                             for i in range(0, len(playerlist)):
                                 if playerlist[i] == nick:
@@ -805,12 +798,12 @@ class pickup(Thread):
                             if "+o" in data[3]:
                                 if data[2] == pub_chan: # data[2] = CHANNEL #data[4] = NICK
                                     op.append(data[4])
-                                    print op
+                                    print (op)
                             elif "-o" in data[3]:
                                 if data[2] == pub_chan:
                                     if data[4] in op:
                                         op.remove(data[4])
-                                        print op
+                                        print (op)
                             elif "+v" in data[3]:
                                 if data[2] == pub_chan:
                                     if game == '0':
@@ -858,7 +851,7 @@ class pickup(Thread):
                             
                             if data[3] == ":"+quit_cmd:
                                 shost = getnick[1]
-                                print data[3] + " " + shost
+                                print (data[3] + " " + shost)
                                 if shost in OWNER:
                                     self.s.send('QUIT\n')
                                     ping_active = 0
@@ -952,7 +945,7 @@ class pickup(Thread):
                                             while len(playerlist) < int(data[4]):
                                                 playerlist.append('Gost0r'+str(i))
                                                 i=int(i)+1
-                                            print playerlist
+                                            print (playerlist)
                                             self.s.send('PRIVMSG ' + channel + ' :Players set to ' + data[4] + '\n')
                                             self.update_ping()
                                         elif data[3].lower() == (":" + cmd_prefix + pickup_rcon): #SETRCON
@@ -980,10 +973,10 @@ class pickup(Thread):
                                                             found = True
                                                     if found == False:
                                                         if int(addnum) <= 9:
-                                                            print playernum
+                                                            print (playernum)
                                                             addnum = str(int(addnum)+1)
                                                             addlist.append(nick)
-                                                            print playernum
+                                                            print (playernum)
                                                             self.s.send('MODE ' + channel + ' +v ' +nick+ '\n')
                                                             self.update_ping()
                                             #REMOVE
@@ -1088,7 +1081,7 @@ class pickup(Thread):
 
                 except:
                     self.s.close()
-                    print "DIE"
+                    print ("DIE")
                     traceback.print_exc(file=sys.stdout)
                     sys.exit()
 
@@ -1105,12 +1098,12 @@ class ping_thread(Thread):
                 sys.exit()
                 break
             if (((int(ping_last) + 185) - time()) < 0):
-                print 'ping: PING ALERT, GONNA RESTART'
+                print ('ping: PING ALERT, GONNA RESTART')
                 pickupThread = pickup(1)
                 pickupThread.start()
                 sleep(30)
             else:
-                print 'ping: IT\'S OKAY, GONNA SLEEP'
+                print ('ping: IT\'S OKAY, GONNA SLEEP')
                 sleep(30)
 
 
@@ -1136,10 +1129,10 @@ class q3rcon_rconuse(Thread):
         self.socket.close()
         
     def run(self):
-        print 'RCON COMMAND: ' + self.msg
-        print "usercon starting..."
+        print ('RCON COMMAND: ' + self.msg)
+        print ("usercon starting...")
         self.rconuse()
-        print "usercon done...."    
+        print ("usercon done....")
         
 
 
@@ -1183,9 +1176,9 @@ class q3rcon_setcaptain(Thread):
         self.socket.close()
         
     def run(self):
-        print "cap starting..."
+        print ("cap starting...")
         self.setcaptain()
-        print "cap done...."        
+        print ("cap done....")
 
 
 
@@ -1213,9 +1206,9 @@ class q3rcon_setpassword(Thread):
         self.socket.close()
         
     def run(self):
-        print "pw starting..."
+        print ("pw starting...")
         self.setpassword()
-        print "pw done...."
+        print ("pw done....")
 
 
 
@@ -1237,16 +1230,16 @@ class q3rcon_setmap(Thread):
         port = int(ipport[1])
         self.socket.connect((ip, port))
         msg = "map " + smap
-        print msg
+        print (msg)
         #self.fullmsg = msg_prefix + bytes((('rcon \"%s\" %s\n')%(rconpw, msg)), "UTF-8")
         self.fullmsg = msg_prefix + ('rcon \"%s\" %s\n')%(rconpw, msg)
         self.socket.send(self.fullmsg)
         self.socket.close()
         
     def run(self):
-        print "map starting..."
+        print ("map starting...")
         self.setmap()
-        print "map done...."
+        print ("map done....")
 
 #a_server = '46.4.27.24:27964'
 #a_rcon = 'p1ckuplyf3'
